@@ -1,0 +1,31 @@
+# Dependencias locales
+node_modules/
+
+# Variables de entorno / secretos
+.env
+.env.*
+!.env.example
+
+# Certificados
+certs/  se debe considerar eliminar los certificados
+
+# Git
+.git/
+.gitignore
+
+# Documentación
+README.md
+SETUP.md
+
+# Archivos temporales / logs
+*.log
+.DS_Store
+Thumbs.db
+
+# Tests / coverage
+coverage/
+.nyc_output/
+
+# IDEs
+.vscode/
+.idea/

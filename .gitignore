@@ -1,0 +1,16 @@
+node_modules
+
+# Variables de entorno y credenciales fuera del control de versiones
+.env
+.env.*
+!.env.example
+env-prod
+
+# Material criptografico
+certs/
+*.p12
+*.pem
+*.key
+
+.DS_Store
+npm-debug.log*
