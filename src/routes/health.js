@@ -27,7 +27,7 @@ router.post('/api/logins', async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: '8h',
+      expiresIn: '14d',
     }
   );
 
