@@ -1,5 +1,5 @@
 {
-  "name": "dimasoft-smallservices-api",
+  "name": "dimasoft-jamila-api",
   "version": "1.0.0",
   "description": "API de servicios pequenos Dimasoft sobre PostgreSQL (Cloud SQL) con mTLS via PKCS#12",
   "type": "module",

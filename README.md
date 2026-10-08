@@ -1,4 +1,4 @@
-# dimasoft_smallservices_api
+# dimasoft-jamila-api
 
 API de servicios pequenos sobre las instancias PostgreSQL (Google Cloud SQL) de Dimasoft.
 Node 24 LTS, ESM, Express 5 y `pg` (node-postgres).
