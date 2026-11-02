@@ -54,7 +54,9 @@ router.get(
 
       const rows = await query(
           getCompanyPool('084', 1),
-          'SELECT CODIGOSUC, FECHA, CODIGO, CODIGOPRIN, CANTIDAD, UNIDAD, DETALLE, ORDENDET  FROM Nota_ped_det WHERE folio = $1 and codigosuc=$2',
+          'SELECT CODIGOSUC, FECHA, CODIGO AS CODIGO_BARRA,  CODIGOPRIN AS SKU, CANTIDAD, UNIDAD, DETALLE, ORDENDET, productos.UBICACION, SALCANDESP \
+           FROM Nota_ped_det LEFT JOIN productos ON Nota_ped_det.codigo = productos.codigo_producto \
+           WHERE folio = $1 and codigosuc=$2 order by ubicacion asc',
           [numpedido, sucursal],
           );
 
