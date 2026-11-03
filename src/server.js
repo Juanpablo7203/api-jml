@@ -1,9 +1,8 @@
 import app from './app.js';
 import { env } from './config/env.js';
 import { closeAllPools } from './db/index.js';
-import cors from 'cors';
 
-app.use(cors()); // Habilita peticiones desde cualquier origen y terminal Zebra
+
 
 const server = app.listen(env.port, () => {
   console.log(`[api] dimasoft-smallservices-api escuchando en http://localhost:${env.port}`);

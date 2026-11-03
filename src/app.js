@@ -2,6 +2,9 @@ import express from 'express';
 import './config/env.js';
 import healthRoutes from './routes/health.js';
 import { responseJson } from './utils/response.js';
+import cors from 'cors';
+
+app.use(cors()); // Habilita peticiones desde cualquier origen y terminal Zebra
 
 const app = express();
 
