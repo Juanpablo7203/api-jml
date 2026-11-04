@@ -76,6 +76,37 @@ router.get(
 });
 
 
+router.get(
+  '/api/loadpassalto', 
+  verificarToken,
+  async (req, res) => {
+  const nombre = 'PassClaveZebra';
+
+  try {
+
+      const rows = await query(
+          getCompanyPool('084',  1),
+          'SELECT VALORTEXT \
+           FROM CONFIGURA \
+           WHERE trim(Campo) = $1 ',
+          [nombre],
+          );
+
+      return responseJson(res, 200, 'ok', {
+        exito: true,
+        mensaje: "valor encontrado",
+        count: rows.length,
+        rows,
+      });
+  } catch (error) {
+    return responseJson(res, 503, 'Error al consultar la base', {
+      exito: false,
+      mensaje:  error.message,
+      code: error.code,
+    });
+  }
+});
+
 router.post(
   '/api/confirma{/:numpedido/:sucursal}',
   verificarToken,
