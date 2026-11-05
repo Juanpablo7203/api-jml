@@ -56,7 +56,7 @@ router.get(
           getCompanyPool('043', 1),
           'SELECT CODIGOSUC, FECHA, productos.codbar_producto AS CODIGO_BARRA,  productos.codigo_producto AS SKU, CANTIDAD, UNIDAD, DETALLE, ORDENDET, productos.UBICACION, SALCANDESP \
            FROM Nota_ped_det LEFT JOIN productos ON Nota_ped_det.codigo = productos.codigo_producto \
-           WHERE folio = $1 and codigosuc=$2 order by ubicacion asc',
+           WHERE folio = $1 and codigosuc=$2 and SALCANDESP<>0 order by ubicacion asc',
           [numpedido, sucursal],
           );
 
@@ -172,7 +172,7 @@ router.post(
             const result = await client.query(
               `UPDATE NOTA_PED_DET
                SET SALCANDESP = SALCANDESP - $1
-               WHERE codigo = $2
+               WHERE trim(codigo) = trim($2)
                  AND folio = $3
                  AND codigosuc = $4`,
               [
