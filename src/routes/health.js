@@ -53,7 +53,7 @@ router.get(
   try {
 
       const rows = await query(
-          getCompanyPool('084', 1),
+          getCompanyPool('043', 1),
           'SELECT CODIGOSUC, FECHA, productos.codbar_producto AS CODIGO_BARRA,  productos.codigo_producto AS SKU, CANTIDAD, UNIDAD, DETALLE, ORDENDET, productos.UBICACION, SALCANDESP \
            FROM Nota_ped_det LEFT JOIN productos ON Nota_ped_det.codigo = productos.codigo_producto \
            WHERE folio = $1 and codigosuc=$2 order by ubicacion asc',
@@ -85,7 +85,7 @@ router.get(
   try {
 
       const rows = await query(
-          getCompanyPool('084',  1),
+          getCompanyPool('043',  1),
           'SELECT VALORTEXT \
            FROM CONFIGURA \
            WHERE trim(Campo) = $1 ',
@@ -152,9 +152,20 @@ router.post(
 
     try {
 
+      // Preparar los detalles para PostgreSQL
+      const detalles = datos.map((item, index) => ({
+        CODIGO: item.codigo,
+        CANTIDAD: Number(item.cantidad),
+        INDICE: item.indice ?? index + 1,
+      }));
+
       await withTransaction(
-        getCompanyPool('084', 1),
+        getCompanyPool('043', 1),
         async (client) => {
+
+          // ==========================================
+          // 1. ACTUALIZAR NOTA_PED_DET
+          // ==========================================
 
           for (const item of datos) {
 
@@ -178,15 +189,44 @@ router.post(
               );
             }
           }
-        }
-      );
 
-      return responseJson(res, 200, 'ok', {
-        exito: true,
-        mensaje: 'Actualización efectuada',
+          // ==========================================
+          // 2. INSERTAR CODIGODESPA Y SUS DETALLES
+          // ==========================================
+
+          const resultadoDespa = await client.query(
+            `SELECT FN_INSERTAR_CODIGODESPA(
+                $1::INTEGER,
+                $2::CHAR(3),
+                NOW()::TIMESTAMP,
+                $3::JSONB
+             ) AS CODUNICO`,
+            [
+              numpedido,
+              sucursal,
+              JSON.stringify(detalles),
+            ]
+          );
+
+          const codUnico = resultadoDespa.rows[0].codunico;
+
+          // Retornar el código generado
+          return codUnico;
+
+        }
+      ).then((codUnico) => {
+
+        return responseJson(res, 200, 'ok', {
+          exito: true,
+          mensaje: 'Actualización y despacho registrados correctamente',
+          CODUNICO: codUnico,
+        });
+
       });
 
     } catch (error) {
+
+      console.error('Error al confirmar despacho:', error);
 
       return responseJson(res, 503, 'Error al actualizar', {
         exito: false,
